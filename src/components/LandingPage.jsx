@@ -26,9 +26,6 @@ export default function LandingPage({ onOpenAuth }) {
           <a href="#how-it-works" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, transition: 'var(--transition-fast)' }} onMouseOver={e => e.target.style.color = '#fff'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>
             How It Works
           </a>
-          <a href="#helpline" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, transition: 'var(--transition-fast)', display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseOver={e => e.target.style.color = '#fff'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>
-            <PhoneCall size={14} style={{ color: 'var(--color-rose)' }} /> 24/7 Helpline
-          </a>
         </div>
 
         {/* Right Action Buttons */}
