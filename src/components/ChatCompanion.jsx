@@ -10,16 +10,42 @@ const CHAT_SUGGESTIONS = [
   "How do I manage my study time better?"
 ];
 
+// Typewriter component to animate incoming messages
+function TypewriterText({ text, speed = 8, onComplete }) {
+  const [displayedText, setDisplayedText] = useState('');
+
+  useEffect(() => {
+    setDisplayedText('');
+    if (!text) return;
+    
+    let index = 0;
+    const interval = setInterval(() => {
+      setDisplayedText((prev) => prev + text.charAt(index));
+      index++;
+      if (index >= text.length) {
+        clearInterval(interval);
+        if (onComplete) onComplete();
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return <span>{displayedText}</span>;
+}
+
 export default function ChatCompanion({ apiKey, studentName, examType, latestMoodLog }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hi ${studentName || 'Aspirant'}, I'm Aura, your digital study companion. Whether you're feeling burned out by ${examType || 'exams'}, anxious about mock tests, or just need to vent, I'm here. How is your preparation feeling today?`
+      content: `Hi ${studentName || 'Aspirant'}, I'm Aura, your digital study companion. Whether you're feeling burned out by ${examType || 'exams'}, anxious about mock tests, or just need to vent, I'm here. How is your preparation feeling today?`,
+      typewrite: false // don't typewrite the initial welcome message
     }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showCrisisBanner, setShowCrisisBanner] = useState(false);
+  const [hasSentMessage, setHasSentMessage] = useState(false);
   
   const messagesEndRef = useRef(null);
 
@@ -34,6 +60,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
   const handleSendMessage = async (textToSend) => {
     if (!textToSend.trim()) return;
 
+    setHasSentMessage(true);
     const userMessage = { role: 'user', content: textToSend };
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
@@ -58,12 +85,13 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
         setShowCrisisBanner(true);
       }
 
-      setMessages(prev => [...prev, { role: 'assistant', content: response.text }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: response.text, typewrite: true }]);
     } catch (err) {
       console.error(err);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I'm having a small connection hiccup, but I'm still here. Take a deep breath. What's on your mind?" 
+        content: "I'm having a small connection hiccup, but I'm still here. Take a deep breath. What's on your mind?",
+        typewrite: true
       }]);
     } finally {
       setIsTyping(false);
@@ -93,7 +121,18 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
       <div className="chat-messages">
         {messages.map((msg, index) => (
           <div key={index} className={`chat-bubble ${msg.role}`}>
-            <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'left' }}>{msg.content}</p>
+            <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+              {msg.role === 'assistant' && msg.typewrite ? (
+                <TypewriterText 
+                  text={msg.content} 
+                  onComplete={() => {
+                    msg.typewrite = false; // Disable typing animation for future re-renders
+                  }} 
+                />
+              ) : (
+                msg.content
+              )}
+            </p>
           </div>
         ))}
         {isTyping && (
@@ -123,22 +162,32 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
         </div>
       )}
 
-      {/* Suggestion Chips */}
-      <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem' }}>Quick suggestions:</span>
-        <div className="suggestion-chips" style={{ marginTop: 0 }}>
-          {CHAT_SUGGESTIONS.map((sug, i) => (
-            <button
-              key={i}
-              className="suggestion-chip"
-              onClick={() => handleSendMessage(sug)}
-              disabled={isTyping}
-            >
-              {sug}
-            </button>
-          ))}
+      {/* Suggestion Chips - Vanishes after 1 question */}
+      {!hasSentMessage && (
+        <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>
+            Quick suggestions:
+          </span>
+          <div className="suggestion-chips" style={{ marginTop: 0 }}>
+            {CHAT_SUGGESTIONS.map((sug, i) => (
+              <button
+                key={i}
+                className="suggestion-chip"
+                style={{ 
+                  color: 'var(--text-primary)', 
+                  background: 'rgba(255, 255, 255, 0.05)', 
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                  fontWeight: 500
+                }}
+                onClick={() => handleSendMessage(sug)}
+                disabled={isTyping}
+              >
+                {sug}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Chat Input Field */}
       <form onSubmit={handleSubmit} className="chat-input-row">
