@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, Sparkles } from 'lucide-react';
+import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Flame, AlertCircle, LogOut, Sparkles } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Journal from './components/Journal';
 import ChatCompanion from './components/ChatCompanion';
 import MindfulnessHub from './components/MindfulnessHub';
 import Analytics from './components/Analytics';
-import SettingsModal from './components/SettingsModal';
 import LandingPage from './components/LandingPage';
 import AuthModal from './components/AuthModal';
 import { fetchUserData, saveMoodLog, saveJournalEntry } from './services/api';
@@ -34,10 +33,9 @@ const DEFAULT_MOOD_HISTORY = [
 
 export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authTab, setAuthTab] = useState('signin');
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(true);
 
   // Authenticated User State
   const [currentUser, setCurrentUser] = useState(() => {
@@ -152,13 +150,6 @@ export default function App() {
     localStorage.removeItem('aura_journal_history');
   };
 
-  const handleSaveSettings = (newSettings) => {
-    setSettings(newSettings);
-    if (currentUser) {
-      setCurrentUser(prev => ({ ...prev, name: newSettings.name, exam: newSettings.exam }));
-    }
-  };
-
   const handleAddMoodLog = (newLog) => {
     setMoodHistory(prev => {
       const filtered = prev.filter(log => log.date !== newLog.date);
@@ -187,12 +178,13 @@ export default function App() {
 
   const cleanName = formatDisplayName(currentUser ? currentUser.name : settings.name);
 
-  // Unauthenticated view: Render Landing Page
-  if (!currentUser) {
+  // Unauthenticated view: Render Landing Page if not in demo mode
+  if (!currentUser && !isDemoMode) {
     return (
       <>
         <LandingPage 
           onOpenAuth={handleOpenAuth} 
+          onExploreDemo={() => setIsDemoMode(true)}
         />
         <AuthModal 
           isOpen={isAuthOpen} 
@@ -352,16 +344,8 @@ export default function App() {
               <span className="user-name">{cleanName}</span>
               <span className="user-exam">{settings.exam} aspirant</span>
             </div>
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.25rem' }}>
-              <button 
-                className="icon-btn" 
-                style={{ width: '32px', height: '32px' }}
-                onClick={() => setIsSettingsOpen(true)}
-                aria-label="Open settings"
-              >
-                <Settings size={14} />
-              </button>
-              {currentUser && (
+            {currentUser && (
+              <div style={{ marginLeft: 'auto' }}>
                 <button 
                   className="icon-btn" 
                   style={{ width: '32px', height: '32px', color: 'var(--color-rose)' }}
@@ -370,8 +354,8 @@ export default function App() {
                 >
                   <LogOut size={14} />
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
@@ -388,13 +372,6 @@ export default function App() {
               <Flame size={16} fill="#fbbf24" />
               <span>{getHeaderStreak()} Day Streak</span>
             </div>
-            <button 
-              className="icon-btn" 
-              onClick={() => setIsSettingsOpen(true)}
-              aria-label="Open settings panel"
-            >
-              <Settings size={18} />
-            </button>
           </div>
         </header>
 
@@ -412,14 +389,6 @@ export default function App() {
           <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>{welcomeNotification}</span>
         </div>
       )}
-
-      {/* Settings Modal Component */}
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)}
-        settings={settings}
-        onSave={handleSaveSettings}
-      />
 
       <AuthModal 
         isOpen={isAuthOpen} 

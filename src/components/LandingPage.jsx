@@ -1,6 +1,6 @@
 import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus } from 'lucide-react';
 
-export default function LandingPage({ onOpenAuth }) {
+export default function LandingPage({ onOpenAuth, onExploreDemo }) {
   return (
     <div style={{ width: '100%', height: '100vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', color: 'var(--text-primary)', position: 'relative' }}>
       
@@ -29,6 +29,15 @@ export default function LandingPage({ onOpenAuth }) {
 
         {/* Right Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          {onExploreDemo && (
+            <button 
+              className="btn btn-secondary" 
+              onClick={onExploreDemo}
+              style={{ padding: '0.65rem 1.2rem', fontSize: '0.9rem', borderRadius: 'var(--radius-md)' }}
+            >
+              <Sparkles size={15} /> Open Companion
+            </button>
+          )}
           <button 
             className="btn btn-secondary" 
             onClick={() => onOpenAuth('signin')}
@@ -62,8 +71,13 @@ export default function LandingPage({ onOpenAuth }) {
         </p>
 
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button className="btn btn-primary" onClick={() => onOpenAuth('signup')} style={{ padding: '1rem 2.25rem', fontSize: '1.05rem' }}>
-            Get Started Free <ArrowRight size={18} />
+          {onExploreDemo && (
+            <button className="btn btn-primary" onClick={onExploreDemo} style={{ padding: '1rem 2.25rem', fontSize: '1.05rem' }}>
+              Try AI Companion Free <Sparkles size={18} />
+            </button>
+          )}
+          <button className="btn btn-secondary" onClick={() => onOpenAuth('signup')} style={{ padding: '1rem 2.25rem', fontSize: '1.05rem' }}>
+            Sign Up Account <ArrowRight size={18} />
           </button>
         </div>
 
