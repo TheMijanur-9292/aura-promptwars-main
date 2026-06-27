@@ -93,20 +93,20 @@ function getDynamicChatFallback(lastUserMessage) {
 
   // 1. Programming & Technology Questions
   if (lower.includes("java")) {
-    return `Java is one of the most popular and powerful programming languages in the world! It is widely used to build Android apps, web applications, and large software systems.\n\nHere are the key things you should know about Java:\nâ€¢ **Object-Oriented**: It helps developers write clean, reusable modular code.\nâ€¢ **Platform Independent**: "Write Once, Run Anywhere" (WORA)â€”Java code can run on Windows, Mac, Linux, or mobile devices thanks to the Java Virtual Machine (JVM).\nâ€¢ **Easy to Learn**: Java has a simple syntax similar to C++, making it great for beginners and students.\n\nAre you studying Java for your school computer science exam or building a project? Let me know if you need help with any specific code concept! ðŸ˜Š`;
+    return `Java is one of the most popular and powerful programming languages in the world! It is widely used to build Android apps, web applications, and large enterprise systems.\n\nKey things to know about Java:\n• **Object-Oriented**: Helps developers write clean, reusable modular code.\n• **Platform Independent**: "Write Once, Run Anywhere" (WORA)—Java runs on Windows, Mac, Linux, or mobile via JVM.\n• **Easy to Learn**: Has a clear, structured syntax.\n\nAre you studying Java for your exams or building a project? Let me know if you need help with a specific concept!`;
   }
   
   if (lower.includes("python")) {
-    return `Python is a super friendly and versatile programming language known for its ultra-clean, easy-to-read syntax!\n\nWhy students love Python:\nâ€¢ **Simple Syntax**: Reads almost like normal English.\nâ€¢ **Huge Capabilities**: Used for Artificial Intelligence, Data Science, Web Development, and Automation.\nâ€¢ **Great for Beginners**: Perfect first language to learn programming fundamentals.`;
+    return `Python is a super friendly and versatile programming language known for its ultra-clean, easy-to-read syntax!\n\nWhy students love Python:\n• **Simple Syntax**: Reads almost like normal English.\n• **Huge Capabilities**: Used for AI, Data Science, Web Development, and Automation.\n• **Great for Beginners**: Perfect first language to learn programming fundamentals.`;
   }
 
   if (lower.includes("coding") || lower.includes("programming") || lower.includes("code") || lower.includes("c++")) {
-    return `Coding is simply giving step-by-step instructions to a computer to solve problems!\n\nTips for learning programming:\nâ€¢ Start with one language (like Python or Java) and focus on logic.\nâ€¢ Practice writing small programs daily rather than just reading theory.\nâ€¢ Don't fear errorsâ€”debugging is where real learning happens!`;
+    return `Coding is simply giving step-by-step instructions to a computer to solve problems!\n\nTips for learning programming:\n• Start with one language (like Python or Java) and focus on logic.\n• Practice writing small programs daily rather than just reading theory.\n• Don't fear errors—debugging is where real learning happens!`;
   }
 
   // 2. Physics & Core Science Questions
   if (lower.includes("physics") || lower.includes("newton") || lower.includes("mechanics")) {
-    return `Physics is all about understanding how the universe works through formulas and logic!\n\nQuick tip for Physics numericals:\nâ€¢ Always write down the **Given variables** and **Units** first.\nâ€¢ Draw a rough diagram if applicable (e.g. Free Body Diagrams in mechanics).\nâ€¢ Pick the core formula before substituting values to avoid silly algebraic mistakes.`;
+    return `Physics is all about understanding how the universe works through formulas and logic!\n\nQuick tips for Physics problems:\n• Always write down the **Given variables** and **Units** first.\n• Draw a rough diagram if applicable (e.g. Free Body Diagrams in mechanics).\n• Pick the core formula before substituting values to avoid algebraic mistakes.`;
   }
 
   if (lower.includes("chemistry") || lower.includes("organic") || lower.includes("reaction")) {
@@ -114,22 +114,22 @@ function getDynamicChatFallback(lastUserMessage) {
   }
 
   if (lower.includes("math") || lower.includes("calculus") || lower.includes("equation")) {
-    return `Mathematics improves with active problem-solving consistency! Don't just memorize formulasâ€”understand how they are derived and practice 5-10 problems per topic daily.`;
+    return `Mathematics improves with active problem-solving consistency! Don't just memorize formulas—understand how they are derived and practice 5-10 problems per topic daily.`;
   }
 
   // 3. Platform & MindEase Questions
   if (lower.includes("mindease") || lower.includes("platform") || lower.includes("app") || lower.includes("tool")) {
-    return `MindEase is your 24/7 digital student wellness companion designed specifically to help you manage exam stress and achieve focused success!\n\nHere is what you can do on MindEase:\nâ€¢ **Daily Journaling**: Write down your thoughts and get live AI emotional analysis & coping strategies.\nâ€¢ **Mindfulness Hub**: Practice Box Breathing and 4-7-8 relaxation exercises to calm pre-exam anxiety.\nâ€¢ **Wellness Analytics**: Track your mood trends and stress factors over time.\nâ€¢ **Chat Companion**: Talk with me anytime you need guidance or study encouragement!`;
+    return `MindEase is your 24/7 digital student wellness companion designed specifically to help you manage exam stress and achieve focused success!\n\nHere is what you can do on MindEase:\n• **Daily Journaling**: Write down your thoughts and get live AI emotional analysis & coping strategies.\n• **Mindfulness Hub**: Practice Box Breathing and 4-7-8 relaxation exercises to calm pre-exam anxiety.\n• **Wellness Analytics**: Track your mood trends and stress factors over time.\n• **Chat Companion**: Talk with me anytime you need guidance or study encouragement!`;
   }
 
   // 4. Greetings
   if (lower === "hi" || lower === "hello" || lower === "hey" || lower.startsWith("hi ") || lower.startsWith("hello ")) {
-    return `Hey there! ðŸ˜Š I'm MindEase, your study friend and mentor. I am right here with you. What subject are you working on or what's on your mind today?`;
+    return `Hey there! I'm MindEase, your study companion and mentor. I'm right here with you. What subject are you working on or what's on your mind today?`;
   }
 
   // 5. Exam Pressure, Mock Tests, Burnout & Motivation
   if (lower.includes("test") || lower.includes("mock") || lower.includes("score") || lower.includes("marks")) {
-    return `It is completely normal for mock test marks to fluctuate during exam preparation!\n\nRemember:\nâ€¢ Mock tests are diagnostics to find your weak spots, not a final judgment of your ability.\nâ€¢ Analyze your incorrect questions: were they silly calculation mistakes or conceptual gaps?\nâ€¢ Focus on steady 1% daily improvement!`;
+    return `It is completely normal for mock test marks to fluctuate during exam preparation!\n\nRemember:\n• Mock tests are diagnostics to find your weak spots, not a final judgment of your ability.\n• Analyze your incorrect questions: were they silly calculation mistakes or conceptual gaps?\n• Focus on steady 1% daily improvement!`;
   }
 
   if (lower.includes("tired") || lower.includes("sleep") || lower.includes("exhausted") || lower.includes("burnout")) {

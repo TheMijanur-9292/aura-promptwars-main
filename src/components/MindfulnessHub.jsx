@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Compass, Play, Pause, RefreshCw, Eye, Hand, Activity } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Play, Pause, RefreshCw, Eye, Hand, Activity } from 'lucide-react';
 
 const TECHNIQUES = {
   box: {
@@ -33,13 +33,13 @@ export default function MindfulnessHub() {
   const techData = TECHNIQUES[activeTech];
   const currentStep = techData.steps[currentStepIdx];
 
-  useEffect(() => {
-    // Reset state on technique switch
+  const handleSwitchTech = (techKey) => {
+    setActiveTech(techKey);
     setIsPlaying(false);
     setCurrentStepIdx(0);
-    setTimeLeft(TECHNIQUES[activeTech].steps[0].duration);
+    setTimeLeft(TECHNIQUES[techKey].steps[0].duration);
     setCyclesCompleted(0);
-  }, [activeTech]);
+  };
 
   useEffect(() => {
     let timer = null;
@@ -64,7 +64,7 @@ export default function MindfulnessHub() {
       clearInterval(timer);
     }
     return () => clearInterval(timer);
-  }, [isPlaying, currentStepIdx, activeTech]);
+  }, [isPlaying, currentStepIdx, activeTech, techData]);
 
   const handleTogglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -105,7 +105,7 @@ export default function MindfulnessHub() {
             <button
               key={key}
               className={`btn ${activeTech === key ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setActiveTech(key)}
+              onClick={() => handleSwitchTech(key)}
               style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}
             >
               {TECHNIQUES[key].name}

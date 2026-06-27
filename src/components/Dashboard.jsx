@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Smile, Zap, Frown, Award, Flame, Brain, BookOpen, Compass, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Smile, Zap, Award, Flame, Brain, Compass, ArrowRight } from 'lucide-react';
 
 const MOODS = [
   { value: 2, emoji: '😭', label: 'Overwhelmed', desc: 'Feeling burned out' },

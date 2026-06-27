@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, RefreshCw, AlertCircle, Compass, HelpCircle, Heart, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Send, AlertCircle, Compass, Heart, Sparkles } from 'lucide-react';
 import { getChatResponse } from '../services/groq';
 
 const CHAT_SUGGESTIONS = [
@@ -20,28 +20,86 @@ function formatDisplayName(name) {
   return clean.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-// Typewriter component to animate incoming messages
-function TypewriterText({ text, speed = 8, onComplete }) {
-  const [displayedText, setDisplayedText] = useState('');
+// Typewriter component to animate incoming messages cleanly without scrambling
+function TypewriterText({ text, speed = 10 }) {
+  const [displayedText, setDisplayedText] = useState(text ? text.slice(0, 3) : '');
 
   useEffect(() => {
-    setDisplayedText('');
     if (!text) return;
-    
-    let index = 0;
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(index));
-      index++;
-      if (index >= text.length) {
-        clearInterval(interval);
-        if (onComplete) onComplete();
+    let curr = 3;
+    const timer = setInterval(() => {
+      curr += 3;
+      if (curr >= text.length) {
+        setDisplayedText(text);
+        clearInterval(timer);
+      } else {
+        setDisplayedText(text.slice(0, curr));
       }
     }, speed);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, [text, speed]);
 
-  return <span>{displayedText}</span>;
+  return <FormattedText text={displayedText} />;
+}
+
+// Rich Markdown Formatter helper to render bold, bullet points, headers & clean paragraphs
+function FormattedText({ text }) {
+  if (!text) return null;
+
+  // Clean any weird character glitches
+  let cleanText = text
+    .replace(/â€¢/g, '•')
+    .replace(/â€”/g, '—')
+    .replace(/âœ…/g, '✅')
+    .replace(/âŒ/g, '❌')
+    .replace(/âšï¸/g, '⚠️');
+
+  const lines = cleanText.split('\n');
+
+  const parseInlineBold = (str) => {
+    const parts = str.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} style={{ color: '#ffffff', fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', lineHeight: '1.6', textAlign: 'left' }}>
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} style={{ height: '0.25rem' }} />;
+
+        if (trimmed.startsWith('•') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const bulletContent = trimmed.replace(/^([•*-]\s*)/, '');
+          return (
+            <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', paddingLeft: '0.3rem', margin: '0.1rem 0' }}>
+              <span style={{ color: '#c084fc', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>•</span>
+              <span style={{ flex: 1 }}>{parseInlineBold(bulletContent)}</span>
+            </div>
+          );
+        }
+
+        if (trimmed.startsWith('#')) {
+          const headerText = trimmed.replace(/^#+\s*/, '');
+          return (
+            <div key={idx} style={{ fontWeight: 700, fontSize: '1.05rem', color: '#ffffff', margin: '0.4rem 0 0.2rem 0' }}>
+              {parseInlineBold(headerText)}
+            </div>
+          );
+        }
+
+        return (
+          <div key={idx} style={{ margin: 0 }}>
+            {parseInlineBold(line)}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function ChatCompanion({ apiKey, studentName, examType, latestMoodLog }) {
@@ -175,8 +233,8 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
         ) : (
           messages.map((msg, index) => (
             <div key={index} className={`chat-bubble ${msg.role}`}>
-              <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'left' }}>
-                {msg.role === 'assistant' && msg.typewrite ? (
+              {msg.role === 'assistant' ? (
+                msg.typewrite ? (
                   <TypewriterText 
                     text={msg.content} 
                     onComplete={() => {
@@ -184,9 +242,11 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
                     }} 
                   />
                 ) : (
-                  msg.content
-                )}
-              </p>
+                  <FormattedText text={msg.content} />
+                )
+              ) : (
+                <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'left' }}>{msg.content}</p>
+              )}
             </div>
           ))
         )}

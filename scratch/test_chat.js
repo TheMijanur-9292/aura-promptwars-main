@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { getChatResponse } from '../src/services/groq.js';
 
 async function test() {

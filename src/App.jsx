@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, LogIn, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, Sparkles } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Journal from './components/Journal';
 import ChatCompanion from './components/ChatCompanion';
@@ -57,13 +57,6 @@ export default function App() {
     return { name: 'Aspirant', exam: 'JEE', apiKey: import.meta.env.VITE_GROQ_API_KEY || '' };
   });
 
-  // Sync env key if not set
-  useEffect(() => {
-    if (!settings.apiKey && import.meta.env.VITE_GROQ_API_KEY) {
-      setSettings(prev => ({ ...prev, apiKey: import.meta.env.VITE_GROQ_API_KEY }));
-    }
-  }, []);
-
   // Mood logs history
   const [moodHistory, setMoodHistory] = useState(() => {
     const saved = localStorage.getItem('aura_mood_history');
@@ -87,16 +80,13 @@ export default function App() {
 
   // Sync user details when currentUser updates
   useEffect(() => {
+    let isMounted = true;
     if (currentUser) {
-      setSettings(prev => ({
-        ...prev,
-        name: currentUser.name || prev.name,
-        exam: currentUser.exam || prev.exam
-      }));
       localStorage.setItem('aura_current_user', JSON.stringify(currentUser));
       
       // Fetch cloud data from Neon DB
       fetchUserData(currentUser.email).then(data => {
+        if (!isMounted) return;
         if (data) {
           setMoodHistory(data.moodHistory || []);
           setJournalHistory(data.journalHistory || []);
@@ -108,6 +98,7 @@ export default function App() {
     } else {
       localStorage.removeItem('aura_current_user');
     }
+    return () => { isMounted = false; };
   }, [currentUser]);
 
   // Save state updates to local storage
@@ -136,6 +127,13 @@ export default function App() {
 
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
+    if (user.name || user.exam) {
+      setSettings(prev => ({
+        ...prev,
+        name: user.name || prev.name,
+        exam: user.exam || prev.exam
+      }));
+    }
     setIsDemoMode(false);
     const userDisplayName = formatDisplayName(user.name);
     setWelcomeNotification(`🎉 Welcome back, ${userDisplayName}! Ready for focused success today.`);
@@ -152,10 +150,6 @@ export default function App() {
     localStorage.removeItem('aura_current_user');
     localStorage.removeItem('aura_mood_history');
     localStorage.removeItem('aura_journal_history');
-  };
-
-  const handleExploreDemo = () => {
-    setIsDemoMode(true);
   };
 
   const handleSaveSettings = (newSettings) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Shield, Key, BookOpen, User } from 'lucide-react';
 
 export default function SettingsModal({ isOpen, onClose, settings, onSave }) {

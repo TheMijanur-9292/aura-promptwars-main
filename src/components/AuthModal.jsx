@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Lock, Mail, User, BookOpen, LogIn, UserPlus, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { registerUser, loginUser } from '../services/api';
 

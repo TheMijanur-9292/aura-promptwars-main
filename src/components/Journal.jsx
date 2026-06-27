@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { PenTool, Brain, Calendar, Compass, AlertCircle, RefreshCw, Send, Check, Sparkles, Activity } from 'lucide-react';
+import { useState } from 'react';
+import { PenTool, Brain, Calendar, Compass, AlertCircle, RefreshCw, Check, Sparkles, Activity } from 'lucide-react';
 import { analyzeJournal } from '../services/groq';
 
 export default function Journal({ apiKey, journalHistory, onAddJournal }) {

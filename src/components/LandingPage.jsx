@@ -1,5 +1,4 @@
-import React from 'react';
-import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus, PhoneCall } from 'lucide-react';
+import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus } from 'lucide-react';
 
 export default function LandingPage({ onOpenAuth }) {
   return (

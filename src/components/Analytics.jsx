@@ -1,5 +1,4 @@
-import React from 'react';
-import { Activity, Calendar, AlertTriangle, TrendingUp, BarChart2 } from 'lucide-react';
+import { TrendingUp, BarChart2 } from 'lucide-react';
 
 export default function Analytics({ moodHistory }) {
   
