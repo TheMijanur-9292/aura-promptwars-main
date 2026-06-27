@@ -35,7 +35,7 @@ export default function App() {
     return {
       name: 'Aspirant',
       exam: 'JEE',
-      apiKey: import.meta.env.VITE_GROQ_API_KEY || ''
+      apiKey: ''
     };
   });
 
@@ -78,13 +78,6 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('aura_journal_history', JSON.stringify(journalHistory));
   }, [journalHistory]);
-
-  // Sync user's provided env key if not already set manually
-  useEffect(() => {
-    if (!settings.apiKey && import.meta.env.VITE_GROQ_API_KEY) {
-      setSettings(prev => ({ ...prev, apiKey: import.meta.env.VITE_GROQ_API_KEY }));
-    }
-  }, []);
 
   const handleSaveSettings = (newSettings) => {
     setSettings(newSettings);
