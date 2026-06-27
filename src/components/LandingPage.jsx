@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus, PhoneCall } from 'lucide-react';
 
-export default function LandingPage({ onOpenAuth, onExploreDemo }) {
+export default function LandingPage({ onOpenAuth }) {
   return (
     <div style={{ width: '100%', height: '100vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', color: 'var(--text-primary)', position: 'relative' }}>
       
@@ -9,7 +9,7 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
       <nav style={{ width: '100%', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 3rem', borderBottom: '1px solid var(--glass-border)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(10, 11, 18, 0.85)', boxSizing: 'border-box' }}>
         
         {/* Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={onExploreDemo}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)' }}>
             <Heart size={22} fill="white" />
           </div>
@@ -68,9 +68,6 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <button className="btn btn-primary" onClick={() => onOpenAuth('signup')} style={{ padding: '1rem 2.25rem', fontSize: '1.05rem' }}>
             Get Started Free <ArrowRight size={18} />
-          </button>
-          <button className="btn btn-secondary" onClick={onExploreDemo} style={{ padding: '1rem 2.25rem', fontSize: '1.05rem' }}>
-            Explore Instant Demo
           </button>
         </div>
 

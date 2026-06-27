@@ -176,12 +176,11 @@ export default function App() {
   const cleanName = formatDisplayName(currentUser ? currentUser.name : settings.name);
 
   // Unauthenticated view: Render Landing Page
-  if (!currentUser && !isDemoMode) {
+  if (!currentUser) {
     return (
       <>
         <LandingPage 
           onOpenAuth={handleOpenAuth} 
-          onExploreDemo={handleExploreDemo}
         />
         <AuthModal 
           isOpen={isAuthOpen} 
