@@ -231,49 +231,73 @@ Rules you MUST follow:
 
 Always give a real, correct, helpful answer. Never give a vague or template response.`;
 
-  // API key â€” always use the working key
-  const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY;
-  
-  // Use Vite proxy to bypass CORS: /groq-api â†’ https://api.groq.com
+  const cleanMessages = messages.slice(-8).map(m => ({
+    role: m.role === 'user' ? 'user' : 'assistant',
+    content: String(m.content || '')
+  }));
+
+  // Attempt 1: Call Express backend server proxy (/api/chat)
+  try {
+    const backendRes = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: cleanMessages,
+        systemPrompt
+      })
+    });
+    if (backendRes.ok) {
+      const data = await backendRes.json();
+      if (data.text) {
+        console.log(`[MindEase AI] ✅ Live AI response via backend proxy (${data.model})`);
+        return { isCrisis: false, text: data.text };
+      }
+    }
+  } catch (backendErr) {
+    console.warn("[MindEase AI] Backend chat proxy unavailable, trying direct Groq API...", backendErr.message);
+  }
+
+  // Attempt 2: Direct / Vite proxy call to Groq API
+  const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY || apiKey;
   const PROXY_URL = "/groq-api/openai/v1/chat/completions";
   const MODELS = [PRIMARY_MODEL, ...FALLBACK_MODELS];
 
-  for (const model of MODELS) {
-    try {
-      console.log(`[MindEase AI] Calling model: ${model} via Vite proxy`);
-      
-      const response = await fetch(PROXY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${GROQ_KEY}`
-        },
-        body: JSON.stringify({
-          model,
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...messages.slice(-8)
-          ],
-          temperature: 0.75,
-          max_tokens: 700
-        })
-      });
+  if (GROQ_KEY) {
+    for (const model of MODELS) {
+      try {
+        console.log(`[MindEase AI] Calling model: ${model} via Vite proxy`);
+        
+        const response = await fetch(PROXY_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${GROQ_KEY}`
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: "system", content: systemPrompt },
+              ...cleanMessages
+            ],
+            temperature: 0.75,
+            max_tokens: 700
+          })
+        });
 
-      console.log(`[MindEase AI] Status: ${response.status} from model: ${model}`);
-
-      if (response.ok) {
-        const data = await response.json();
-        const text = data.choices?.[0]?.message?.content?.trim();
-        if (text) {
-          console.log(`[MindEase AI] âœ… Live AI response from ${model}`);
-          return { isCrisis: false, text };
+        if (response.ok) {
+          const data = await response.json();
+          const text = data.choices?.[0]?.message?.content?.trim();
+          if (text) {
+            console.log(`[MindEase AI] ✅ Live AI response from ${model}`);
+            return { isCrisis: false, text };
+          }
+        } else {
+          const err = await response.text();
+          console.error(`[MindEase AI] Error ${response.status} for ${model}:`, err);
         }
-      } else {
-        const err = await response.text();
-        console.error(`[MindEase AI] Error ${response.status} for ${model}:`, err);
+      } catch (err) {
+        console.error(`[MindEase AI] Fetch error for ${model}:`, err.message);
       }
-    } catch (err) {
-      console.error(`[MindEase AI] Fetch error for ${model}:`, err.message);
     }
   }
 
