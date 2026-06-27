@@ -121,6 +121,7 @@ body::after {
 /* Base Layout */
 #root {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   max-height: 100vh;
   width: 100%;
@@ -391,6 +392,12 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--color-purple);
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
   background: rgba(255, 255, 255, 0.05);
+}
+
+select option {
+  background-color: #11131e;
+  color: #f3f4f6;
+  padding: 0.75rem;
 }
 
 /* Buttons */
