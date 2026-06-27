@@ -59,15 +59,19 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
   const [showCrisisBanner, setShowCrisisBanner] = useState(false);
   const [hasSentMessage, setHasSentMessage] = useState(false);
   
-  const messagesEndRef = useRef(null);
+  const chatMessagesRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    if (hasSentMessage) {
+      scrollToBottom();
+    }
+  }, [messages, isTyping, hasSentMessage]);
 
   const handleSendMessage = async (textToSend) => {
     if (!textToSend.trim()) return;
@@ -130,7 +134,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
       </div>
 
       {/* Messages Window */}
-      <div className="chat-messages">
+      <div className="chat-messages" ref={chatMessagesRef}>
         {!hasSentMessage ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100%', textAlign: 'center', padding: '2rem 1rem' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', boxShadow: '0 0 30px rgba(168, 85, 247, 0.4)' }}>
@@ -193,7 +197,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
             <span style={{ width: '6px', height: '6px', background: 'var(--text-secondary)', borderRadius: '50%', animation: 'bounce 1s infinite', animationDelay: '0.4s' }} />
           </div>
         )}
-        <div ref={messagesEndRef} />
+        {/* End marker */}
       </div>
 
       {/* Safety Alert Banner */}
