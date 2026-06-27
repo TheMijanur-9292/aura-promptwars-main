@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle } from 'lucide-react';
+import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, LogIn } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Journal from './components/Journal';
 import ChatCompanion from './components/ChatCompanion';
 import MindfulnessHub from './components/MindfulnessHub';
 import Analytics from './components/Analytics';
 import SettingsModal from './components/SettingsModal';
+import LandingPage from './components/LandingPage';
+import AuthModal from './components/AuthModal';
+import { fetchUserData, saveMoodLogToDb, saveJournalEntryToDb } from './services/db';
 import './App.css';
 
 // Helper to format email or messy username strings into clean display names
@@ -32,34 +35,36 @@ const DEFAULT_MOOD_HISTORY = [
 export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  // Settings state (hydrates from localStorage or env default)
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState('signin');
+  const [isDemoMode, setIsDemoMode] = useState(false);
+
+  // Authenticated User State
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('aura_current_user');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return null;
+  });
+
+  // Settings state (hydrates from currentUser or localStorage)
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('aura_settings');
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error(e);
-      }
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
     }
-    return {
-      name: 'Aspirant',
-      exam: 'JEE',
-      apiKey: ''
-    };
+    return { name: 'Aspirant', exam: 'JEE', apiKey: '' };
   });
 
-  // Mood logs history (hydrates from localStorage or provides default mock logs)
+  // Mood logs history
   const [moodHistory, setMoodHistory] = useState(() => {
     const saved = localStorage.getItem('aura_mood_history');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (parsed.length > 0) return parsed;
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) { console.error(e); }
     }
     return DEFAULT_MOOD_HISTORY;
   });
@@ -68,14 +73,32 @@ export default function App() {
   const [journalHistory, setJournalHistory] = useState(() => {
     const saved = localStorage.getItem('aura_journal_history');
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error(e);
-      }
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
     }
     return [];
   });
+
+  // Sync user details when currentUser updates
+  useEffect(() => {
+    if (currentUser) {
+      setSettings(prev => ({
+        ...prev,
+        name: currentUser.name || prev.name,
+        exam: currentUser.exam || prev.exam
+      }));
+      localStorage.setItem('aura_current_user', JSON.stringify(currentUser));
+      
+      // Fetch cloud data from Neon DB
+      fetchUserData(currentUser.email).then(data => {
+        if (data) {
+          if (data.moodHistory && data.moodHistory.length > 0) setMoodHistory(data.moodHistory);
+          if (data.journalHistory) setJournalHistory(data.journalHistory);
+        }
+      });
+    } else {
+      localStorage.removeItem('aura_current_user');
+    }
+  }, [currentUser]);
 
   // Save state updates to local storage
   useEffect(() => {
@@ -90,8 +113,31 @@ export default function App() {
     localStorage.setItem('aura_journal_history', JSON.stringify(journalHistory));
   }, [journalHistory]);
 
+  const handleOpenAuth = (tabName = 'signin') => {
+    setAuthTab(tabName);
+    setIsAuthOpen(true);
+  };
+
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+    setIsDemoMode(false);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsDemoMode(false);
+    localStorage.removeItem('aura_current_user');
+  };
+
+  const handleExploreDemo = () => {
+    setIsDemoMode(true);
+  };
+
   const handleSaveSettings = (newSettings) => {
     setSettings(newSettings);
+    if (currentUser) {
+      setCurrentUser(prev => ({ ...prev, name: newSettings.name, exam: newSettings.exam }));
+    }
   };
 
   const handleAddMoodLog = (newLog) => {
@@ -99,10 +145,16 @@ export default function App() {
       const filtered = prev.filter(log => log.date !== newLog.date);
       return [...filtered, newLog];
     });
+    if (currentUser) {
+      saveMoodLogToDb(currentUser.email, newLog);
+    }
   };
 
   const handleAddJournalLog = (newJournal) => {
     setJournalHistory(prev => [newJournal, ...prev]);
+    if (currentUser) {
+      saveJournalEntryToDb(currentUser.email, newJournal);
+    }
     
     if (newJournal.analysis && newJournal.analysis.moodScore) {
       handleAddMoodLog({
@@ -114,7 +166,25 @@ export default function App() {
     }
   };
 
-  const cleanName = formatDisplayName(settings.name);
+  const cleanName = formatDisplayName(currentUser ? currentUser.name : settings.name);
+
+  // Unauthenticated view: Render Landing Page
+  if (!currentUser && !isDemoMode) {
+    return (
+      <>
+        <LandingPage 
+          onOpenAuth={handleOpenAuth} 
+          onExploreDemo={handleExploreDemo}
+        />
+        <AuthModal 
+          isOpen={isAuthOpen} 
+          onClose={() => setIsAuthOpen(false)}
+          initialTab={authTab}
+          onAuthSuccess={handleAuthSuccess}
+        />
+      </>
+    );
+  }
 
   // Helper to render current active view
   const renderView = () => {
@@ -198,8 +268,6 @@ export default function App() {
     return streak;
   };
 
-  const isDemoMode = !settings.apiKey || settings.apiKey === 'demo';
-
   return (
     <div className="app-container">
       
@@ -250,11 +318,11 @@ export default function App() {
         {/* Sidebar Footer: User details and settings trigger */}
         <div className="sidebar-footer">
           
-          {/* Demo Mode warning in sidebar */}
-          {isDemoMode && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 0.75rem', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 'var(--radius-md)', color: '#fbbf24', fontSize: '0.75rem' }}>
-              <AlertCircle size={14} style={{ flexShrink: 0 }} />
-              <span>Offline Demo Mode active</span>
+          {/* Demo Mode warning or Auth status in sidebar */}
+          {isDemoMode && !currentUser && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', padding: '0.6rem 0.75rem', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 'var(--radius-md)', color: '#fbbf24', fontSize: '0.75rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><AlertCircle size={14} /> Demo Mode</span>
+              <button onClick={() => handleOpenAuth('signin')} style={{ background: 'none', border: 'none', color: '#fbbf24', fontWeight: 700, cursor: 'pointer', padding: 0 }}>Sign In</button>
             </div>
           )}
 
@@ -266,14 +334,26 @@ export default function App() {
               <span className="user-name">{cleanName}</span>
               <span className="user-exam">{settings.exam} aspirant</span>
             </div>
-            <button 
-              className="icon-btn" 
-              style={{ marginLeft: 'auto', width: '32px', height: '32px' }}
-              onClick={() => setIsSettingsOpen(true)}
-              aria-label="Open settings"
-            >
-              <Settings size={14} />
-            </button>
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.25rem' }}>
+              <button 
+                className="icon-btn" 
+                style={{ width: '32px', height: '32px' }}
+                onClick={() => setIsSettingsOpen(true)}
+                aria-label="Open settings"
+              >
+                <Settings size={14} />
+              </button>
+              {currentUser && (
+                <button 
+                  className="icon-btn" 
+                  style={{ width: '32px', height: '32px', color: 'var(--color-rose)' }}
+                  onClick={handleLogout}
+                  aria-label="Log out"
+                >
+                  <LogOut size={14} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </aside>
@@ -313,6 +393,13 @@ export default function App() {
         onClose={() => setIsSettingsOpen(false)}
         settings={settings}
         onSave={handleSaveSettings}
+      />
+
+      <AuthModal 
+        isOpen={isAuthOpen} 
+        onClose={() => setIsAuthOpen(false)}
+        initialTab={authTab}
+        onAuthSuccess={handleAuthSuccess}
       />
 
     </div>
