@@ -38,7 +38,7 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
       <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '900px', margin: '0 auto' }}>
         
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 1rem', borderRadius: 'var(--radius-xl)', background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.25)', color: '#c084fc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.75rem' }}>
-          <Sparkles size={14} /> Powered by GenAI & Groq Llama 3.3
+          <Sparkles size={14} /> Your 24/7 Digital Student Wellness Companion
         </div>
 
         <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.5rem', background: 'linear-gradient(135deg, #ffffff 30%, #a855f7 70%, #6366f1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-1.5px' }}>
