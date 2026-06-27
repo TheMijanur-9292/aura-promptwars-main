@@ -54,8 +54,15 @@ export default function App() {
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { console.error(e); }
     }
-    return { name: 'Aspirant', exam: 'JEE', apiKey: '' };
+    return { name: 'Aspirant', exam: 'JEE', apiKey: import.meta.env.VITE_GROQ_API_KEY || '' };
   });
+
+  // Sync env key if not set
+  useEffect(() => {
+    if (!settings.apiKey && import.meta.env.VITE_GROQ_API_KEY) {
+      setSettings(prev => ({ ...prev, apiKey: import.meta.env.VITE_GROQ_API_KEY }));
+    }
+  }, []);
 
   // Mood logs history
   const [moodHistory, setMoodHistory] = useState(() => {
