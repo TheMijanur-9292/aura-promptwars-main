@@ -1,33 +1,49 @@
 import React from 'react';
-import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus } from 'lucide-react';
+import { Heart, Sparkles, Brain, Compass, Activity, Shield, CheckCircle, ArrowRight, LogIn, UserPlus, PhoneCall } from 'lucide-react';
 
 export default function LandingPage({ onOpenAuth, onExploreDemo }) {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflowX: 'hidden' }}>
+    <div style={{ width: '100%', height: '100vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', color: 'var(--text-primary)', position: 'relative' }}>
       
       {/* Top Navbar */}
-      <nav style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 3rem', borderBottom: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 50, background: 'rgba(10, 11, 16, 0.8)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ width: '38px', height: '38px', borderRadius: 'var(--radius-sm)', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 0 15px rgba(168, 85, 247, 0.4)' }}>
-            <Heart size={20} fill="white" />
+      <nav style={{ width: '100%', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 3rem', borderBottom: '1px solid var(--glass-border)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', position: 'sticky', top: 0, zIndex: 100, background: 'rgba(10, 11, 18, 0.85)', boxSizing: 'border-box' }}>
+        
+        {/* Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={onExploreDemo}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)' }}>
+            <Heart size={22} fill="white" />
           </div>
-          <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 700, background: 'linear-gradient(135deg, #fff 30%, #a855f7 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>
+          <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 800, background: 'linear-gradient(135deg, #ffffff 30%, #a855f7 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>
             AURA
           </span>
         </div>
 
+        {/* Center Navigation Items */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }} className="nav-links-desktop">
+          <a href="#features" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, transition: 'var(--transition-fast)' }} onMouseOver={e => e.target.style.color = '#fff'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>
+            Features
+          </a>
+          <a href="#how-it-works" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, transition: 'var(--transition-fast)' }} onMouseOver={e => e.target.style.color = '#fff'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>
+            How It Works
+          </a>
+          <a href="#helpline" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, transition: 'var(--transition-fast)', display: 'flex', alignItems: 'center', gap: '0.4rem' }} onMouseOver={e => e.target.style.color = '#fff'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>
+            <PhoneCall size={14} style={{ color: 'var(--color-rose)' }} /> 24/7 Helpline
+          </a>
+        </div>
+
+        {/* Right Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button 
             className="btn btn-secondary" 
             onClick={() => onOpenAuth('signin')}
-            style={{ padding: '0.6rem 1.25rem', fontSize: '0.9rem' }}
+            style={{ padding: '0.65rem 1.35rem', fontSize: '0.9rem', borderRadius: 'var(--radius-md)' }}
           >
             <LogIn size={15} /> Sign In
           </button>
           <button 
             className="btn btn-primary" 
             onClick={() => onOpenAuth('signup')}
-            style={{ padding: '0.6rem 1.25rem', fontSize: '0.9rem' }}
+            style={{ padding: '0.65rem 1.4rem', fontSize: '0.9rem', borderRadius: 'var(--radius-md)' }}
           >
             <UserPlus size={15} /> Sign Up Free
           </button>
@@ -35,7 +51,7 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
       </nav>
 
       {/* Hero Section */}
-      <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '900px', margin: '0 auto' }}>
+      <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '900px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
         
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 1rem', borderRadius: 'var(--radius-xl)', background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.25)', color: '#c084fc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.75rem' }}>
           <Sparkles size={14} /> Your 24/7 Digital Student Wellness Companion
@@ -68,7 +84,7 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
       </section>
 
       {/* Features Grid */}
-      <section style={{ padding: '4rem 3rem 6rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <section id="features" style={{ padding: '4rem 3rem 6rem', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 700, marginBottom: '0.75rem' }}>
             Designed for Academic Excellence & Mental Balance
@@ -113,8 +129,28 @@ export default function LandingPage({ onOpenAuth, onExploreDemo }) {
         </div>
       </section>
 
+      {/* Helpline banner section */}
+      <section id="helpline" style={{ padding: '3rem 2rem', background: 'rgba(244, 63, 94, 0.05)', borderTop: '1px solid rgba(244, 63, 94, 0.2)', borderBottom: '1px solid rgba(244, 63, 94, 0.2)', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: '#fda4af', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <Shield size={20} /> Immediate Support & Helplines
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '1.25rem' }}>
+            Aura is designed for emotional self-care and stress reduction. If you or someone you know is in severe distress, immediate professional help is available 24/7 in India.
+          </p>
+          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="tel:14416" style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fff', padding: '0.6rem 1.25rem', borderRadius: 'var(--radius-md)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📞 Tele-MANAS: 14416
+            </a>
+            <a href="tel:9820466726" style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--glass-border)', color: '#fff', padding: '0.6rem 1.25rem', borderRadius: 'var(--radius-md)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📞 KIRAN Helpline: 1800-599-0019
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer style={{ marginTop: 'auto', borderTop: '1px solid var(--glass-border)', padding: '2rem 3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+      <footer style={{ marginTop: 'auto', borderTop: '1px solid var(--glass-border)', padding: '2rem 3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', background: 'rgba(10, 11, 16, 0.9)' }}>
         <p>© 2026 Aura Mental Wellness Companion. Crafted with care for students everywhere.</p>
       </footer>
 
