@@ -2,7 +2,7 @@
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const PRIMARY_MODEL = "llama-3.3-70b-versatile"; 
-const FALLBACK_MODELS = ["llama-3.1-8b-instant", "llama3-8b-8192", "mixtral-8x7b-32768"];
+const FALLBACK_MODELS = ["llama-3.1-8b-instant"];
 
 // Crisis words detection for instant safety trigger (Security parameter)
 const CRISIS_KEYWORDS = [
@@ -257,46 +257,46 @@ Always give a real, correct, helpful answer. Never give a vague or template resp
     console.warn("[MindEase AI] Backend chat proxy unavailable, trying direct Groq API...", backendErr.message);
   }
 
-  // Attempt 2: Direct / Vite proxy call to Groq API
+  // Attempt 2: Direct / Proxy call to Groq API
   const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY || apiKey;
-  const PROXY_URL = "/groq-api/openai/v1/chat/completions";
+  const ENDPOINTS = ["/groq-api/openai/v1/chat/completions", GROQ_API_URL];
   const MODELS = [PRIMARY_MODEL, ...FALLBACK_MODELS];
 
   if (GROQ_KEY) {
-    for (const model of MODELS) {
-      try {
-        console.log(`[MindEase AI] Calling model: ${model} via Vite proxy`);
-        
-        const response = await fetch(PROXY_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${GROQ_KEY}`
-          },
-          body: JSON.stringify({
-            model,
-            messages: [
-              { role: "system", content: systemPrompt },
-              ...cleanMessages
-            ],
-            temperature: 0.75,
-            max_tokens: 700
-          })
-        });
+    for (const endpoint of ENDPOINTS) {
+      for (const model of MODELS) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${GROQ_KEY}`
+            },
+            body: JSON.stringify({
+              model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                ...cleanMessages
+              ],
+              temperature: 0.75,
+              max_tokens: 700
+            })
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          const text = data.choices?.[0]?.message?.content?.trim();
-          if (text) {
-            console.log(`[MindEase AI] ✅ Live AI response from ${model}`);
-            return { isCrisis: false, text };
+          if (response.ok) {
+            const contentType = response.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+              const data = await response.json();
+              const text = data.choices?.[0]?.message?.content?.trim();
+              if (text) {
+                console.log(`[MindEase AI] ✅ Live AI response from ${model}`);
+                return { isCrisis: false, text };
+              }
+            }
           }
-        } else {
-          const err = await response.text();
-          console.error(`[MindEase AI] Error ${response.status} for ${model}:`, err);
+        } catch (err) {
+          console.debug("[MindEase AI] Endpoint attempt failed:", err?.message || err);
         }
-      } catch (err) {
-        console.error(`[MindEase AI] Fetch error for ${model}:`, err.message);
       }
     }
   }

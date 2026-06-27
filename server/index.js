@@ -228,7 +228,7 @@ app.post('/api/chat', async (req, res) => {
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
   const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-  const MODELS = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama3-8b-8192"];
+  const MODELS = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
 
   const cleanMessages = messages.slice(-8).map(m => ({
     role: m.role === 'user' ? 'user' : 'assistant',
