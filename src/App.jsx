@@ -8,6 +8,17 @@ import Analytics from './components/Analytics';
 import SettingsModal from './components/SettingsModal';
 import './App.css';
 
+// Helper to format email or messy username strings into clean display names
+function formatDisplayName(name) {
+  if (!name) return 'Aspirant';
+  let clean = name;
+  if (clean.includes('@')) {
+    clean = clean.split('@')[0];
+  }
+  clean = clean.replace(/[._]/g, ' ');
+  return clean.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 // Initial default logs to provide sample context for hackathon evaluators
 const DEFAULT_MOOD_HISTORY = [
   { date: '2026-06-21', mood: 6, energy: 50, stressors: ['Lack of Sleep'] },
@@ -84,7 +95,6 @@ export default function App() {
   };
 
   const handleAddMoodLog = (newLog) => {
-    // Prevent duplicate entries for the same day if re-logged, replace existing or add
     setMoodHistory(prev => {
       const filtered = prev.filter(log => log.date !== newLog.date);
       return [...filtered, newLog];
@@ -94,16 +104,17 @@ export default function App() {
   const handleAddJournalLog = (newJournal) => {
     setJournalHistory(prev => [newJournal, ...prev]);
     
-    // Also automatically log mood in mood history if mood score is returned
     if (newJournal.analysis && newJournal.analysis.moodScore) {
       handleAddMoodLog({
         date: newJournal.date,
         mood: newJournal.analysis.moodScore,
-        energy: 50, // default placeholder
+        energy: 50,
         stressors: newJournal.analysis.primaryStressors || []
       });
     }
   };
+
+  const cleanName = formatDisplayName(settings.name);
 
   // Helper to render current active view
   const renderView = () => {
@@ -111,7 +122,7 @@ export default function App() {
       case 'dashboard':
         return (
           <Dashboard 
-            userName={settings.name} 
+            userName={cleanName} 
             targetExam={settings.exam}
             moodHistory={moodHistory}
             onLogMood={handleAddMoodLog}
@@ -130,7 +141,7 @@ export default function App() {
         return (
           <ChatCompanion 
             apiKey={settings.apiKey}
-            studentName={settings.name}
+            studentName={cleanName}
             examType={settings.exam}
             latestMoodLog={moodHistory[moodHistory.length - 1]}
           />
@@ -164,7 +175,6 @@ export default function App() {
     
     let expectedDate = new Date();
     
-    // Check if the most recent log is today or yesterday
     if (sortedDates[0] !== todayStr) {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -250,10 +260,10 @@ export default function App() {
 
           <div className="user-badge">
             <div className="avatar">
-              {settings.name.charAt(0).toUpperCase()}
+              {cleanName.charAt(0).toUpperCase()}
             </div>
             <div className="user-info" style={{ textAlign: 'left' }}>
-              <span className="user-name">{settings.name}</span>
+              <span className="user-name">{cleanName}</span>
               <span className="user-exam">{settings.exam} aspirant</span>
             </div>
             <button 
