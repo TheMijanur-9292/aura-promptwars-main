@@ -88,7 +88,7 @@ export default function MindfulnessHub() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="scrollable-view" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Interactive Breath Visualizer */}
       <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>

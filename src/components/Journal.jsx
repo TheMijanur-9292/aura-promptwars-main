@@ -51,7 +51,7 @@ export default function Journal({ apiKey, journalHistory, onAddJournal }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="scrollable-view" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       <div className="glass-panel" style={{ padding: '2rem' }}>
         <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>

@@ -72,7 +72,7 @@ export default function Analytics({ moodHistory }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="scrollable-view" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Overview Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
