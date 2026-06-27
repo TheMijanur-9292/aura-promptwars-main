@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, LogIn } from 'lucide-react';
+import { LayoutDashboard, BookOpen, MessageSquare, Heart, BarChart3, Settings, Flame, AlertCircle, LogOut, LogIn, Sparkles } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Journal from './components/Journal';
 import ChatCompanion from './components/ChatCompanion';
@@ -120,6 +120,8 @@ export default function App() {
     localStorage.setItem('aura_journal_history', JSON.stringify(journalHistory));
   }, [journalHistory]);
 
+  const [welcomeNotification, setWelcomeNotification] = useState('');
+
   const handleOpenAuth = (tabName = 'signin') => {
     setAuthTab(tabName);
     setIsAuthOpen(true);
@@ -128,6 +130,11 @@ export default function App() {
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
     setIsDemoMode(false);
+    const userDisplayName = formatDisplayName(user.name);
+    setWelcomeNotification(`🎉 Welcome back, ${userDisplayName}! Ready for focused success today.`);
+    setTimeout(() => {
+      setWelcomeNotification('');
+    }, 4500);
   };
 
   const handleLogout = () => {
@@ -392,6 +399,14 @@ export default function App() {
         </div>
 
       </main>
+
+      {/* Designed Welcome Notification Toast */}
+      {welcomeNotification && (
+        <div style={{ position: 'fixed', top: '90px', right: '30px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem 1.25rem', background: 'rgba(168, 85, 247, 0.2)', border: '1px solid rgba(168, 85, 247, 0.5)', borderRadius: 'var(--radius-lg)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', color: '#fff', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', animation: 'fade-in-up 0.4s ease-out' }}>
+          <Sparkles size={22} style={{ color: '#c084fc', flexShrink: 0 }} />
+          <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>{welcomeNotification}</span>
+        </div>
+      )}
 
       {/* Settings Modal Component */}
       <SettingsModal 

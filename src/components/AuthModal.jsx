@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, User, BookOpen, LogIn, UserPlus, AlertCircle, RefreshCw } from 'lucide-react';
+import { X, Lock, Mail, User, BookOpen, LogIn, UserPlus, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { registerUser, loginUser } from '../services/db';
 
 export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAuthSuccess }) {
@@ -9,6 +9,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
   const [name, setName] = useState('');
   const [exam, setExam] = useState('JEE');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -16,14 +17,21 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMsg('');
     setIsLoading(true);
 
     try {
       if (tab === 'signup') {
         if (!name.trim()) throw new Error("Please enter your full name.");
-        const user = await registerUser({ email, password, name, exam });
-        onAuthSuccess(user);
-        onClose();
+        await registerUser({ email, password, name, exam });
+        
+        // Show designed success popup message
+        setSuccessMsg("🎉 Account created successfully! Redirecting to Sign In...");
+        setTimeout(() => {
+          setSuccessMsg('');
+          setPassword('');
+          setTab('signin');
+        }, 1600);
       } else {
         const user = await loginUser({ email, password });
         onAuthSuccess(user);
@@ -38,7 +46,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px', position: 'relative' }}>
         
         {/* Modal Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -56,7 +64,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
                 borderBottom: tab === 'signin' ? '2px solid var(--color-purple)' : 'none',
                 paddingBottom: '0.25rem'
               }}
-              onClick={() => { setTab('signin'); setError(''); }}
+              onClick={() => { setTab('signin'); setError(''); setSuccessMsg(''); }}
             >
               Sign In
             </button>
@@ -73,7 +81,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
                 borderBottom: tab === 'signup' ? '2px solid var(--color-purple)' : 'none',
                 paddingBottom: '0.25rem'
               }}
-              onClick={() => { setTab('signup'); setError(''); }}
+              onClick={() => { setTab('signup'); setError(''); setSuccessMsg(''); }}
             >
               Sign Up
             </button>
@@ -82,6 +90,14 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
             <X size={18} />
           </button>
         </div>
+
+        {/* Designed Success Popup Banner */}
+        {successMsg && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.85rem 1rem', background: 'rgba(20, 184, 166, 0.12)', border: '1px solid rgba(20, 184, 166, 0.35)', borderRadius: 'var(--radius-md)', color: 'var(--color-teal)', fontSize: '0.9rem', fontWeight: 600, marginBottom: '1.25rem', animation: 'fade-in-up 0.3s ease-out' }}>
+            <CheckCircle2 size={18} style={{ flexShrink: 0 }} />
+            <span>{successMsg}</span>
+          </div>
+        )}
 
         {/* Error Banner */}
         {error && (
@@ -156,7 +172,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
           <button 
             type="submit" 
             className="btn btn-primary" 
-            disabled={isLoading}
+            disabled={isLoading || !!successMsg}
             style={{ width: '100%', marginTop: '0.75rem', height: '46px' }}
           >
             {isLoading ? (
@@ -178,7 +194,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAu
           {tab === 'signup' ? 'Already have an account?' : "Don't have an account yet?"}{' '}
           <button 
             type="button" 
-            onClick={() => { setTab(tab === 'signup' ? 'signin' : 'signup'); setError(''); }}
+            onClick={() => { setTab(tab === 'signup' ? 'signin' : 'signup'); setError(''); setSuccessMsg(''); }}
             style={{ background: 'none', border: 'none', color: 'var(--color-purple)', fontWeight: 600, cursor: 'pointer', padding: 0 }}
           >
             {tab === 'signup' ? 'Sign In' : 'Sign Up Free'}
