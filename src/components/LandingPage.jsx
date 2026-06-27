@@ -48,17 +48,17 @@ export default function LandingPage({ onOpenAuth }) {
       </nav>
 
       {/* Hero Section */}
-      <section style={{ padding: '5rem 2rem 4rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '900px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <section style={{ padding: '5rem 3rem 4rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
         
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 1rem', borderRadius: 'var(--radius-xl)', background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.25)', color: '#c084fc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.75rem' }}>
           <Sparkles size={14} /> Your 24/7 Digital Student Wellness Companion
         </div>
 
         <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.5rem', background: 'linear-gradient(135deg, #ffffff 30%, #a855f7 70%, #6366f1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-1.5px' }}>
-          Transform High-Stakes Exam Stress into Focused Success
+          Transform High-Stakes Exam Stress <br /> into Focused Success
         </h1>
 
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', lineHeight: 1.6, maxWidth: '720px', marginBottom: '2.5rem' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', lineHeight: 1.6, maxWidth: '950px', marginBottom: '2.5rem' }}>
           A hyper-personalized digital wellness companion engineered specifically for JEE, NEET, UPSC, and competitive exam aspirants. Track moods, analyze hidden stress triggers, and practice guided mindfulness.
         </p>
 
@@ -78,7 +78,7 @@ export default function LandingPage({ onOpenAuth }) {
       </section>
 
       {/* Features Grid */}
-      <section id="features" style={{ padding: '4rem 3rem 6rem', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <section id="features" style={{ padding: '4rem 3rem 6rem', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 700, marginBottom: '0.75rem' }}>
             Designed for Academic Excellence & Mental Balance
@@ -125,7 +125,7 @@ export default function LandingPage({ onOpenAuth }) {
 
       {/* Helpline banner section */}
       <section id="helpline" style={{ padding: '3rem 2rem', background: 'rgba(244, 63, 94, 0.05)', borderTop: '1px solid rgba(244, 63, 94, 0.2)', borderBottom: '1px solid rgba(244, 63, 94, 0.2)', textAlign: 'center' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ width: '100%', boxSizing: 'border-box' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: '#fda4af', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
             <Shield size={20} /> Immediate Support & Helplines
           </h3>

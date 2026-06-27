@@ -50,7 +50,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hi ${displayName}, I'm MindEase, your digital study companion. Whether you're feeling burned out by ${examType || 'exams'}, anxious about mock tests, or just need to vent, I'm here. How is your preparation feeling today?`,
+      content: `Hi ${displayName}! 😊 I'm MindEase, your friendly study buddy. Whether you are feeling tired from ${examType || 'exams'}, worried about mock tests, or just need someone to talk to, I am right here with you.\n\nHow is your study day going so far?`,
       typewrite: false
     }
   ]);

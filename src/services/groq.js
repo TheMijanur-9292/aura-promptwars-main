@@ -6,7 +6,7 @@ const FALLBACK_MODELS = ["llama-3.1-8b-instant", "llama3-8b-8192", "mixtral-8x7b
 
 // Crisis words detection for instant safety trigger (Security parameter)
 const CRISIS_KEYWORDS = [
-  "suicide", "kill myself", "want to die", "end my life", "self-harm", "self harm", 
+  "suicide", "suicidal", "kill myself", "want to die", "end my life", "self-harm", "self harm", 
   "cutting myself", "hopeless", "better off dead", "don't want to live"
 ];
 
@@ -88,21 +88,56 @@ function getMockAnalysis(text) {
   };
 }
 
-// Intelligent dynamic chat responses when API fails or offline
 function getDynamicChatFallback(lastUserMessage) {
-  const lower = lastUserMessage.toLowerCase();
-  
-  if (lower.includes("physics") || lower.includes("math") || lower.includes("backlog")) {
-    return "Handling physics backlogs while balancing new topics can feel overwhelming! Try taking just ONE core numerical problem right now. Solving a single small sub-topic builds momentum faster than stressing over the entire syllabus.";
-  } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey")) {
-    return "Hello there! I'm MindEase, your study companion. I'm right here with you. What's currently on your mind regarding your preparation today?";
-  } else if (lower.includes("test") || lower.includes("mock") || lower.includes("score") || lower.includes("marks")) {
-    return "Mock test scores fluctuate constantly during prep season. Try analyzing your test errors categorically—were they conceptual gaps or silly mistakes? That will give you clear action items!";
-  } else if (lower.includes("tired") || lower.includes("sleep") || lower.includes("exhausted")) {
-    return "Studying while exhausted yields diminishing returns. Please take a guilt-free 20-minute rest or hydration break right now. Your brain needs recovery to retain formulas!";
-  } else {
-    return "I hear you, and it is completely normal to feel this pressure. Preparing for competitive exams is a marathon. Take a deep breath, exhale slowly, and let's tackle one small topic at a time. What can we focus on next?";
+  const lower = lastUserMessage.toLowerCase().trim();
+
+  // 1. Programming & Technology Questions
+  if (lower.includes("java")) {
+    return `Java is one of the most popular and powerful programming languages in the world! It is widely used to build Android apps, web applications, and large software systems.\n\nHere are the key things you should know about Java:\nâ€¢ **Object-Oriented**: It helps developers write clean, reusable modular code.\nâ€¢ **Platform Independent**: "Write Once, Run Anywhere" (WORA)â€”Java code can run on Windows, Mac, Linux, or mobile devices thanks to the Java Virtual Machine (JVM).\nâ€¢ **Easy to Learn**: Java has a simple syntax similar to C++, making it great for beginners and students.\n\nAre you studying Java for your school computer science exam or building a project? Let me know if you need help with any specific code concept! ðŸ˜Š`;
   }
+  
+  if (lower.includes("python")) {
+    return `Python is a super friendly and versatile programming language known for its ultra-clean, easy-to-read syntax!\n\nWhy students love Python:\nâ€¢ **Simple Syntax**: Reads almost like normal English.\nâ€¢ **Huge Capabilities**: Used for Artificial Intelligence, Data Science, Web Development, and Automation.\nâ€¢ **Great for Beginners**: Perfect first language to learn programming fundamentals.`;
+  }
+
+  if (lower.includes("coding") || lower.includes("programming") || lower.includes("code") || lower.includes("c++")) {
+    return `Coding is simply giving step-by-step instructions to a computer to solve problems!\n\nTips for learning programming:\nâ€¢ Start with one language (like Python or Java) and focus on logic.\nâ€¢ Practice writing small programs daily rather than just reading theory.\nâ€¢ Don't fear errorsâ€”debugging is where real learning happens!`;
+  }
+
+  // 2. Physics & Core Science Questions
+  if (lower.includes("physics") || lower.includes("newton") || lower.includes("mechanics")) {
+    return `Physics is all about understanding how the universe works through formulas and logic!\n\nQuick tip for Physics numericals:\nâ€¢ Always write down the **Given variables** and **Units** first.\nâ€¢ Draw a rough diagram if applicable (e.g. Free Body Diagrams in mechanics).\nâ€¢ Pick the core formula before substituting values to avoid silly algebraic mistakes.`;
+  }
+
+  if (lower.includes("chemistry") || lower.includes("organic") || lower.includes("reaction")) {
+    return `Chemistry blends theory with problem-solving! For Organic Chemistry, focus on mechanism patterns and functional groups. For Physical Chemistry, treat it like Math by practicing numerical formulas daily.`;
+  }
+
+  if (lower.includes("math") || lower.includes("calculus") || lower.includes("equation")) {
+    return `Mathematics improves with active problem-solving consistency! Don't just memorize formulasâ€”understand how they are derived and practice 5-10 problems per topic daily.`;
+  }
+
+  // 3. Platform & MindEase Questions
+  if (lower.includes("mindease") || lower.includes("platform") || lower.includes("app") || lower.includes("tool")) {
+    return `MindEase is your 24/7 digital student wellness companion designed specifically to help you manage exam stress and achieve focused success!\n\nHere is what you can do on MindEase:\nâ€¢ **Daily Journaling**: Write down your thoughts and get live AI emotional analysis & coping strategies.\nâ€¢ **Mindfulness Hub**: Practice Box Breathing and 4-7-8 relaxation exercises to calm pre-exam anxiety.\nâ€¢ **Wellness Analytics**: Track your mood trends and stress factors over time.\nâ€¢ **Chat Companion**: Talk with me anytime you need guidance or study encouragement!`;
+  }
+
+  // 4. Greetings
+  if (lower === "hi" || lower === "hello" || lower === "hey" || lower.startsWith("hi ") || lower.startsWith("hello ")) {
+    return `Hey there! ðŸ˜Š I'm MindEase, your study friend and mentor. I am right here with you. What subject are you working on or what's on your mind today?`;
+  }
+
+  // 5. Exam Pressure, Mock Tests, Burnout & Motivation
+  if (lower.includes("test") || lower.includes("mock") || lower.includes("score") || lower.includes("marks")) {
+    return `It is completely normal for mock test marks to fluctuate during exam preparation!\n\nRemember:\nâ€¢ Mock tests are diagnostics to find your weak spots, not a final judgment of your ability.\nâ€¢ Analyze your incorrect questions: were they silly calculation mistakes or conceptual gaps?\nâ€¢ Focus on steady 1% daily improvement!`;
+  }
+
+  if (lower.includes("tired") || lower.includes("sleep") || lower.includes("exhausted") || lower.includes("burnout")) {
+    return `Studying when your brain is exhausted yields very low retention. Please take a guilt-free 20-minute rest or hydration break right now.\n\nYour mind needs recovery cycles just like muscles do to store memory effectively!`;
+  }
+
+  // 6. Default Dynamic Intelligent Response for Any Other Question
+  return `That's a great question regarding "${lastUserMessage}"!\n\nAs your AI study companion, I'm here to support your learning journey every step of the way. Whether you are revising core concepts, organizing your study schedule, or managing exam pressure, remember to take things one step at a time.\n\nWould you like me to break down this topic further or offer a quick study strategy for it?`;
 }
 
 export async function analyzeJournal(text, apiKey) {
@@ -180,62 +215,70 @@ export async function getChatResponse(messages, context, apiKey) {
     };
   }
 
-  if (!apiKey || apiKey === "demo") {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          isCrisis: false,
-          text: getDynamicChatFallback(lastMsgText)
-        });
-      }, 600);
-    });
-  }
-
-  const { examType, currentMood, activeStressors } = context;
+  const { examType, currentMood, activeStressors } = context || {};
   
-  const systemPrompt = `You are "MindEase", an empathetic, supportive, and active-listening wellness companion for students preparing for high-stakes competitive exams (e.g. ${examType || "competitive entrance exams"}).
-The student's current mood score is ${currentMood || "unspecified"} (out of 10), and their main stressors are: ${activeStressors ? activeStressors.join(", ") : "general exam pressure"}.
+  const systemPrompt = `You are "MindEase", a brilliant, warm, friendly AI mentor for students.
 
-Your guidelines:
-1. Show deep empathy, active listening, and warmth. Never judge, dismiss, or lecture.
-2. Keep your responses relatively short, conversational, and easy to read (max 3-4 sentences). Use bullet points only if offering coping steps.
-3. Help the student reframe negative thoughts. Remind them that exams do not define their self-worth.
-4. Suggest practical, rapid student-friendly mindfulness techniques (e.g., box breathing, neck rolls, water breaks) where appropriate.`;
+You know EVERYTHING â€” all school and college subjects (Physics, Math, Chemistry, Biology, History, Geography, Economics), all programming languages (Java, Python, JavaScript, C++, HTML, SQL, etc.), science, world affairs, sports, arts, current events, and much more.
 
-  const modelsToTry = [PRIMARY_MODEL, ...FALLBACK_MODELS];
+Rules you MUST follow:
+â€¢ Answer ANY question the student asks with accurate, real, helpful information.
+â€¢ NEVER say "I cannot answer that" for normal academic or general knowledge questions.
+â€¢ Use simple, easy, everyday English â€” like a smart friend talking, not a textbook.
+â€¢ Keep it conversational and warm. Add encouragement when the student seems stressed.
+â€¢ Format answers with short paragraphs and bullet points (â€¢) for clarity.
+â€¢ Student context: Exam = ${examType || "Board / JEE / NEET"}, Mood = ${currentMood || "studying"}, Stress = ${activeStressors?.join(", ") || "general exam pressure"}.
 
-  for (const modelCandidate of modelsToTry) {
+Always give a real, correct, helpful answer. Never give a vague or template response.`;
+
+  // API key â€” always use the working key
+  const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY;
+  
+  // Use Vite proxy to bypass CORS: /groq-api â†’ https://api.groq.com
+  const PROXY_URL = "/groq-api/openai/v1/chat/completions";
+  const MODELS = [PRIMARY_MODEL, ...FALLBACK_MODELS];
+
+  for (const model of MODELS) {
     try {
-      const response = await fetch(GROQ_API_URL, {
+      console.log(`[MindEase AI] Calling model: ${model} via Vite proxy`);
+      
+      const response = await fetch(PROXY_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
+          "Authorization": `Bearer ${GROQ_KEY}`
         },
         body: JSON.stringify({
-          model: modelCandidate,
+          model,
           messages: [
             { role: "system", content: systemPrompt },
-            ...messages.slice(-6)
+            ...messages.slice(-8)
           ],
-          temperature: 0.7,
-          max_tokens: 300
+          temperature: 0.75,
+          max_tokens: 700
         })
       });
 
+      console.log(`[MindEase AI] Status: ${response.status} from model: ${model}`);
+
       if (response.ok) {
         const data = await response.json();
-        return {
-          isCrisis: false,
-          text: data.choices[0].message.content
-        };
+        const text = data.choices?.[0]?.message?.content?.trim();
+        if (text) {
+          console.log(`[MindEase AI] âœ… Live AI response from ${model}`);
+          return { isCrisis: false, text };
+        }
+      } else {
+        const err = await response.text();
+        console.error(`[MindEase AI] Error ${response.status} for ${model}:`, err);
       }
     } catch (err) {
-      console.warn(`Groq chat model ${modelCandidate} failed, trying next candidate...`, err);
+      console.error(`[MindEase AI] Fetch error for ${model}:`, err.message);
     }
   }
 
-  // Fallback to dynamic empathetic response if API key encounters network issue
+  // Final offline fallback
+  console.warn("[MindEase AI] All models failed — using local fallback.");
   return {
     isCrisis: false,
     text: getDynamicChatFallback(lastMsgText)

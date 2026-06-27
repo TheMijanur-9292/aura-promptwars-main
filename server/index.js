@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 const { neon } = require('@neondatabase/serverless');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 require('dotenv').config();
 
 const app = express();
@@ -215,6 +217,56 @@ app.post('/api/journal', async (req, res) => {
     console.error("Save Journal Error:", err);
     res.status(500).json({ error: "Failed to save journal entry." });
   }
+});
+
+// GROQ AI CHAT PROXY — routes browser chat requests through server to avoid CORS issues
+app.post('/api/chat', async (req, res) => {
+  const { messages, systemPrompt } = req.body;
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: "messages array required" });
+  }
+
+  const GROQ_API_KEY = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
+  const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+  const MODELS = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama3-8b-8192"];
+
+  for (const model of MODELS) {
+    try {
+      const payload = {
+        model,
+        messages: systemPrompt
+          ? [{ role: "system", content: systemPrompt }, ...messages.slice(-8)]
+          : messages.slice(-8),
+        temperature: 0.75,
+        max_tokens: 700
+      };
+
+      const response = await fetch(GROQ_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.choices?.[0]?.message?.content?.trim();
+        if (text) {
+          console.log(`✅ [Chat Proxy] Got response from ${model}`);
+          return res.json({ text, model });
+        }
+      } else {
+        const errText = await response.text();
+        console.error(`❌ [Chat Proxy] ${model} returned ${response.status}:`, errText);
+      }
+    } catch (err) {
+      console.error(`❌ [Chat Proxy] fetch failed for ${model}:`, err.message);
+    }
+  }
+
+  res.status(502).json({ error: "All Groq models failed" });
 });
 
 app.listen(PORT, () => {

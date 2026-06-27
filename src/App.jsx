@@ -98,8 +98,11 @@ export default function App() {
       // Fetch cloud data from Neon DB
       fetchUserData(currentUser.email).then(data => {
         if (data) {
-          if (data.moodHistory && data.moodHistory.length > 0) setMoodHistory(data.moodHistory);
-          if (data.journalHistory) setJournalHistory(data.journalHistory);
+          setMoodHistory(data.moodHistory || []);
+          setJournalHistory(data.journalHistory || []);
+        } else {
+          setMoodHistory([]);
+          setJournalHistory([]);
         }
       });
     } else {
@@ -113,12 +116,16 @@ export default function App() {
   }, [settings]);
 
   useEffect(() => {
-    localStorage.setItem('aura_mood_history', JSON.stringify(moodHistory));
-  }, [moodHistory]);
+    if (currentUser) {
+      localStorage.setItem(`mindease_mood_${currentUser.email}`, JSON.stringify(moodHistory));
+    }
+  }, [moodHistory, currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('aura_journal_history', JSON.stringify(journalHistory));
-  }, [journalHistory]);
+    if (currentUser) {
+      localStorage.setItem(`mindease_journal_${currentUser.email}`, JSON.stringify(journalHistory));
+    }
+  }, [journalHistory, currentUser]);
 
   const [welcomeNotification, setWelcomeNotification] = useState('');
 
@@ -140,7 +147,11 @@ export default function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     setIsDemoMode(false);
+    setMoodHistory([]);
+    setJournalHistory([]);
     localStorage.removeItem('aura_current_user');
+    localStorage.removeItem('aura_mood_history');
+    localStorage.removeItem('aura_journal_history');
   };
 
   const handleExploreDemo = () => {
@@ -293,34 +304,34 @@ export default function App() {
           <span className="brand-name">MindEase</span>
         </div>
 
-        <nav style={{ flexGrow: 1 }}>
+        <nav style={{ flexGrow: 1 }} aria-label="Main Navigation">
           <ul className="nav-menu">
             <li className={`nav-item ${activeView === 'dashboard' ? 'active' : ''}`}>
-              <button onClick={() => setActiveView('dashboard')}>
+              <button onClick={() => setActiveView('dashboard')} aria-label="Navigate to Dashboard" aria-current={activeView === 'dashboard' ? 'page' : undefined}>
                 <LayoutDashboard size={18} />
                 <span>Dashboard</span>
               </button>
             </li>
             <li className={`nav-item ${activeView === 'journal' ? 'active' : ''}`}>
-              <button onClick={() => setActiveView('journal')}>
+              <button onClick={() => setActiveView('journal')} aria-label="Navigate to Daily Journal" aria-current={activeView === 'journal' ? 'page' : undefined}>
                 <BookOpen size={18} />
                 <span>Daily Journal</span>
               </button>
             </li>
             <li className={`nav-item ${activeView === 'chat' ? 'active' : ''}`}>
-              <button onClick={() => setActiveView('chat')}>
+              <button onClick={() => setActiveView('chat')} aria-label="Navigate to Chat with MindEase" aria-current={activeView === 'chat' ? 'page' : undefined}>
                 <MessageSquare size={18} />
                 <span>Chat with MindEase</span>
               </button>
             </li>
             <li className={`nav-item ${activeView === 'mindfulness' ? 'active' : ''}`}>
-              <button onClick={() => setActiveView('mindfulness')}>
+              <button onClick={() => setActiveView('mindfulness')} aria-label="Navigate to Mindfulness Hub" aria-current={activeView === 'mindfulness' ? 'page' : undefined}>
                 <Heart size={18} />
                 <span>Mindfulness Hub</span>
               </button>
             </li>
             <li className={`nav-item ${activeView === 'analytics' ? 'active' : ''}`}>
-              <button onClick={() => setActiveView('analytics')}>
+              <button onClick={() => setActiveView('analytics')} aria-label="Navigate to Analytics" aria-current={activeView === 'analytics' ? 'page' : undefined}>
                 <BarChart3 size={18} />
                 <span>Analytics</span>
               </button>
