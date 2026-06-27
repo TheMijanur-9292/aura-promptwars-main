@@ -95,7 +95,7 @@ function getDynamicChatFallback(lastUserMessage) {
   if (lower.includes("physics") || lower.includes("math") || lower.includes("backlog")) {
     return "Handling physics backlogs while balancing new topics can feel overwhelming! Try taking just ONE core numerical problem right now. Solving a single small sub-topic builds momentum faster than stressing over the entire syllabus.";
   } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey")) {
-    return "Hello there! I'm Aura, your study companion. I'm right here with you. What's currently on your mind regarding your preparation today?";
+    return "Hello there! I'm MindEase, your study companion. I'm right here with you. What's currently on your mind regarding your preparation today?";
   } else if (lower.includes("test") || lower.includes("mock") || lower.includes("score") || lower.includes("marks")) {
     return "Mock test scores fluctuate constantly during prep season. Try analyzing your test errors categorically—were they conceptual gaps or silly mistakes? That will give you clear action items!";
   } else if (lower.includes("tired") || lower.includes("sleep") || lower.includes("exhausted")) {
@@ -193,7 +193,7 @@ export async function getChatResponse(messages, context, apiKey) {
 
   const { examType, currentMood, activeStressors } = context;
   
-  const systemPrompt = `You are "Aura", an empathetic, supportive, and active-listening wellness companion for students preparing for high-stakes competitive exams (e.g. ${examType || "competitive entrance exams"}).
+  const systemPrompt = `You are "MindEase", an empathetic, supportive, and active-listening wellness companion for students preparing for high-stakes competitive exams (e.g. ${examType || "competitive entrance exams"}).
 The student's current mood score is ${currentMood || "unspecified"} (out of 10), and their main stressors are: ${activeStressors ? activeStressors.join(", ") : "general exam pressure"}.
 
 Your guidelines:

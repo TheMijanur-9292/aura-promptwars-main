@@ -50,7 +50,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hi ${displayName}, I'm Aura, your digital study companion. Whether you're feeling burned out by ${examType || 'exams'}, anxious about mock tests, or just need to vent, I'm here. How is your preparation feeling today?`,
+      content: `Hi ${displayName}, I'm MindEase, your digital study companion. Whether you're feeling burned out by ${examType || 'exams'}, anxious about mock tests, or just need to vent, I'm here. How is your preparation feeling today?`,
       typewrite: false
     }
   ]);
@@ -128,7 +128,7 @@ export default function ChatCompanion({ apiKey, studentName, examType, latestMoo
           <Heart size={20} fill="white" />
         </div>
         <div className="chat-status" style={{ textAlign: 'left' }}>
-          <span className="chat-name">Aura — Study Companion</span>
+          <span className="chat-name">MindEase — Study Companion</span>
           <span className="chat-status-text">Active & Listening Empathically</span>
         </div>
       </div>

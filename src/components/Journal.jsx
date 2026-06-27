@@ -58,7 +58,7 @@ export default function Journal({ apiKey, journalHistory, onAddJournal }) {
           <PenTool size={20} style={{ color: 'var(--color-purple)' }} /> Expressive Daily Journaling
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', textAlign: 'left' }}>
-          Write freely about your day, mock test scores, doubts, fatigue, or any anxieties. Aura's GenAI will read it with empathy, analyze hidden stress triggers, and outline actionable coping strategies.
+          Write freely about your day, mock test scores, doubts, fatigue, or any anxieties. MindEase's GenAI will read it with empathy, analyze hidden stress triggers, and outline actionable coping strategies.
         </p>
 
         <form onSubmit={handleAnalyze} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

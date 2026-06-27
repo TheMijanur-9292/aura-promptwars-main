@@ -8,7 +8,7 @@ import Analytics from './components/Analytics';
 import SettingsModal from './components/SettingsModal';
 import LandingPage from './components/LandingPage';
 import AuthModal from './components/AuthModal';
-import { fetchUserData, saveMoodLogToDb, saveJournalEntryToDb } from './services/db';
+import { fetchUserData, saveMoodLog, saveJournalEntry } from './services/api';
 import './App.css';
 
 // Helper to format email or messy username strings into clean display names
@@ -160,14 +160,14 @@ export default function App() {
       return [...filtered, newLog];
     });
     if (currentUser) {
-      saveMoodLogToDb(currentUser.email, newLog);
+      saveMoodLog(currentUser.email, newLog);
     }
   };
 
   const handleAddJournalLog = (newJournal) => {
     setJournalHistory(prev => [newJournal, ...prev]);
     if (currentUser) {
-      saveJournalEntryToDb(currentUser.email, newJournal);
+      saveJournalEntry(currentUser.email, newJournal);
     }
     
     if (newJournal.analysis && newJournal.analysis.moodScore) {
@@ -246,7 +246,7 @@ export default function App() {
       case 'chat': return 'Empathetic Chat';
       case 'mindfulness': return 'Mindfulness Hub';
       case 'analytics': return 'Wellness Analytics';
-      default: return 'Aura Wellness';
+      default: return 'MindEase Wellness';
     }
   };
 
@@ -290,7 +290,7 @@ export default function App() {
           <div className="brand-icon">
             <Heart size={20} fill="white" />
           </div>
-          <span className="brand-name">AURA</span>
+          <span className="brand-name">MindEase</span>
         </div>
 
         <nav style={{ flexGrow: 1 }}>
@@ -310,7 +310,7 @@ export default function App() {
             <li className={`nav-item ${activeView === 'chat' ? 'active' : ''}`}>
               <button onClick={() => setActiveView('chat')}>
                 <MessageSquare size={18} />
-                <span>Chat with Aura</span>
+                <span>Chat with MindEase</span>
               </button>
             </li>
             <li className={`nav-item ${activeView === 'mindfulness' ? 'active' : ''}`}>

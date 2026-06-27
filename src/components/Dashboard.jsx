@@ -21,11 +21,11 @@ const STRESS_TAGS = [
 ];
 
 const WELLNESS_QUOTES = [
-  { text: "Your worth is not defined by a exam score. You are learning, growing, and doing your best.", author: "Aura" },
-  { text: "It is okay to rest. A rested mind solves physics equations and remembers historical dates far better than an exhausted one.", author: "Aura" },
-  { text: "Do not compare your Chapter 1 to someone else's Chapter 20. Focus on your own path.", author: "Aura" },
-  { text: "Success in entrance exams is a marathon of consistency, not a sprint of burnout. Take care of your mental fuel.", author: "Aura" },
-  { text: "One bad mock test is just data. It tells you what to review, not who you are.", author: "Aura" }
+  { text: "Your worth is not defined by a exam score. You are learning, growing, and doing your best.", author: "MindEase" },
+  { text: "It is okay to rest. A rested mind solves physics equations and remembers historical dates far better than an exhausted one.", author: "MindEase" },
+  { text: "Do not compare your Chapter 1 to someone else's Chapter 20. Focus on your own path.", author: "MindEase" },
+  { text: "Success in entrance exams is a marathon of consistency, not a sprint of burnout. Take care of your mental fuel.", author: "MindEase" },
+  { text: "One bad mock test is just data. It tells you what to review, not who you are.", author: "MindEase" }
 ];
 
 export default function Dashboard({ userName, targetExam, moodHistory, onLogMood, onViewChange }) {
@@ -301,7 +301,7 @@ export default function Dashboard({ userName, targetExam, moodHistory, onLogMood
 
               <div className="glass-card" style={{ padding: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => onViewChange('chat')}>
                 <div style={{ textAlign: 'left' }}>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'white' }}>Chat with Aura</h4>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'white' }}>Chat with MindEase</h4>
                   <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Empathetic counselor on-call</p>
                 </div>
                 <ArrowRight size={14} style={{ color: 'var(--color-purple)' }} />

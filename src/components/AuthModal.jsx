@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, Mail, User, BookOpen, LogIn, UserPlus, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
-import { registerUser, loginUser } from '../services/db';
+import { registerUser, loginUser } from '../services/api';
 
 export default function AuthModal({ isOpen, onClose, initialTab = 'signin', onAuthSuccess }) {
   const [tab, setTab] = useState(initialTab); // 'signin' or 'signup'

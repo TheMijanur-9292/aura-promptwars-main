@@ -14,7 +14,7 @@ export default function LandingPage({ onOpenAuth }) {
             <Heart size={22} fill="white" />
           </div>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 800, background: 'linear-gradient(135deg, #ffffff 30%, #a855f7 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.5px' }}>
-            AURA
+            MindEase
           </span>
         </div>
 
@@ -83,7 +83,7 @@ export default function LandingPage({ onOpenAuth }) {
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 700, marginBottom: '0.75rem' }}>
             Designed for Academic Excellence & Mental Balance
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Standard habit trackers miss emotional nuances. Aura decodes them.</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Standard habit trackers miss emotional nuances. MindEase decodes them.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.75rem' }}>
@@ -100,7 +100,7 @@ export default function LandingPage({ onOpenAuth }) {
             <div style={{ width: '48px', height: '48px', borderRadius: 'var(--radius-md)', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-indigo)', marginBottom: '1.25rem' }}>
               <Heart size={24} />
             </div>
-            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.5rem' }}>Empathetic Companion "Aura"</h3>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 600, marginBottom: '0.5rem' }}>Empathetic Companion "MindEase"</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>An active-listening AI counselor trained to support exam aspirants with real-time cognitive reframing and study-break prompts.</p>
           </div>
 
@@ -130,7 +130,7 @@ export default function LandingPage({ onOpenAuth }) {
             <Shield size={20} /> Immediate Support & Helplines
           </h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '1.25rem' }}>
-            Aura is designed for emotional self-care and stress reduction. If you or someone you know is in severe distress, immediate professional help is available 24/7 in India.
+            MindEase is designed for emotional self-care and stress reduction. If you or someone you know is in severe distress, immediate professional help is available 24/7 in India.
           </p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="tel:14416" style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', color: '#fff', padding: '0.6rem 1.25rem', borderRadius: 'var(--radius-md)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -145,7 +145,7 @@ export default function LandingPage({ onOpenAuth }) {
 
       {/* Footer */}
       <footer style={{ marginTop: 'auto', borderTop: '1px solid var(--glass-border)', padding: '2rem 3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', background: 'rgba(10, 11, 16, 0.9)' }}>
-        <p>© 2026 Aura Mental Wellness Companion. Crafted with care for students everywhere.</p>
+        <p>© 2026 MindEase Mental Wellness Companion. Crafted with care for students everywhere.</p>
       </footer>
 
     </div>
